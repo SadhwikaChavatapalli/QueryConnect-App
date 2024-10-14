@@ -15,7 +15,7 @@ const SignUp = () => {
       return;
     }
     console.log('User registered:', { email, password });
-    navigate('/');
+    navigate('/'); // Redirect to login page after sign up
   };
 
   return (
@@ -65,6 +65,18 @@ const SignUp = () => {
               <button type="submit" className="btn btn-primary">Sign Up</button>
             </div>
           </form>
+
+          {/* Add Login Button */}
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-400">
+              Already have an account?{' '}
+              <a 
+                onClick={() => navigate('/')} 
+                className="link link-primary cursor-pointer">
+                Login
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -55,6 +55,18 @@ const Login = ({ onLogin }) => {
               <button type="submit" className="btn btn-primary">Login</button>
             </div>
           </form>
+
+          {/* Add Sign Up Button */}
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-400">
+              Don't have an account?{' '}
+              <a 
+                onClick={() => navigate('/signup')} 
+                className="link link-primary cursor-pointer">
+                Sign Up
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
