@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-scripts": "^5.0.1",
+    "resize-observer-polyfill": "^1.5.1"
+  }
+}
