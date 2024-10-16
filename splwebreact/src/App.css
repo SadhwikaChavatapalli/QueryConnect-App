@@ -1,0 +1,104 @@
+/* Global overrides for Tailwind styles or custom utility classes */
+
+/* Override default background color globally */
+body {
+  background-color: #F8EDE3; /* Cream background color */
+  color: #8D493A; /* Deep brown text color for the whole body */
+}
+
+/* Customize buttons */
+.btn-primary {
+  background-color: #8D493A; /* Deep brown from the palette */
+  border-color: #8D493A;
+  color: #FFFFFF; /* White text */
+}
+
+.btn-primary:hover {
+  background-color: #D0B8A8; /* Lighter brown */
+  border-color: #D0B8A8;
+}
+
+.btn-secondary {
+  background-color: #8D493A; /* Deep brown from the palette for search button */
+  border-color: #8D493A;
+  color: #FFFFFF; /* White text */
+}
+
+.btn-secondary:hover {
+  background-color: #D0B8A8; /* Lighter brown on hover */
+  border-color: #D0B8A8;
+}
+
+/* Customize cards */
+.card {
+  background-color: #DFD3C3; /* Light beige from the palette */
+  border-radius: 12px; /* Add a slight rounding to card corners */
+  color: #8D493A; /* Ensure text color in cards is also deep brown */
+}
+
+/* Customize form containers */
+.login-container, .signup-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #F8EDE3;
+}
+
+/* Customize text inputs */
+.input {
+  background-color: #F8EDE3; /* Light background color */
+  border-color: #D0B8A8;
+  color: #8D493A; /* Text color */
+}
+
+/* Customize text input focus states */
+.input:focus {
+  border-color: #8D493A;
+  box-shadow: 0 0 0 3px rgba(141, 73, 58, 0.3); /* Adding a subtle focus shadow */
+}
+
+/* Autofill background fix already handled in index.css */
+
+/* Custom styles for card titles */
+.card-title {
+  color: #8D493A; /* Deep brown text color for card titles */
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Custom text for form labels and links */
+.label-text, .link {
+  color: #8D493A; /* Deep brown text color */
+}
+
+/* Custom text for form labels and links on hover */
+.link:hover {
+  color: #D0B8A8; /* Lighter brown when hovering over links */
+}
+
+
+/* Textarea and button styling */
+.textarea {
+  background-color: #F8EDE3; /* Light beige from your palette */
+  color: #8D493A; /* Deep brown text color */
+  border-color: #D0B8A8; /* Lighter brown border color */
+}
+
+.textarea:focus {
+  border-color: #8D493A; /* Deep brown border when focused */
+  box-shadow: 0 0 0 3px rgba(141, 73, 58, 0.3); /* Subtle focus shadow */
+  outline: none;
+}
+
+.btn-primary {
+  background-color: #8D493A; /* Deep brown from the palette */
+  border-color: #8D493A;
+  color: #FFFFFF; /* White text */
+}
+
+.btn-primary:hover {
+  background-color: #D0B8A8; /* Lighter brown on hover */
+  border-color: #D0B8A8;
+}

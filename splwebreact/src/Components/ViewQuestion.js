@@ -5,8 +5,8 @@ const ViewQuestion = () => {
   const { id } = useParams(); // Get question ID from URL
 
   return (
-    <div className="min-h-screen p-6 bg-base-200">
-      <div className="card bg-base-100 shadow-xl">
+    <div className="min-h-screen p-6">
+      <div className="card shadow-xl">
         <div className="card-body">
           <h2 className="card-title">Question {id}</h2>
           <p>This is a placeholder for the question details.</p>

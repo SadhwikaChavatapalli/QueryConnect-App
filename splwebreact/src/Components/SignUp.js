@@ -15,14 +15,14 @@ const SignUp = () => {
       return;
     }
     console.log('User registered:', { email, password });
-    navigate('/'); // Redirect to login page after sign up
+    navigate('/');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title">Create Your Account</h2>
+          <h2 className="card-title text-center">Create Your Account</h2>
           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           <form onSubmit={handleSubmit}>
             <div className="form-control">
@@ -62,11 +62,10 @@ const SignUp = () => {
               />
             </div>
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary">Sign Up</button>
+              <button type="submit" className="btn btn-primary w-full">Sign Up</button>
             </div>
           </form>
-
-          {/* Add Login Button */}
+          {/* Add the Login redirect */}
           <div className="text-center mt-4">
             <p className="text-sm text-gray-400">
               Already have an account?{' '}
