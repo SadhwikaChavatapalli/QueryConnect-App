@@ -3,7 +3,7 @@
 ### The sample data files required for the project are located in the 'Data' folder.
 
 ## Setup and Run API 
-To set the API, please run 'initAPI.ps1' script
+To set the API, please run 'initAPI.ps1' script first.
 <br />To run the API, type - 'go run ./main.go' in the QueryConnectAPI folder.
 
 ## Setup and Run React 
