@@ -1,13 +1,34 @@
+/* Tailwind CSS imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F8EDE3; /* Apply the cream background globally */
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Card overflow fix */
+.card {
+  overflow: hidden; /* Prevents resizing issues */
+}
+
+/* Autofill override for inputs to match the palette */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  background-color: #F8EDE3 !important; /* Cream background */
+  color: #8D493A !important; /* Text color */
+  border-color: #D0B8A8 !important; /* Border color */
+  box-shadow: 0 0 0px 1000px #F8EDE3 inset !important; /* Ensure background doesn't revert */
+  -webkit-text-fill-color: #8D493A !important; /* Set text fill color */
 }
