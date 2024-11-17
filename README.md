@@ -1,6 +1,6 @@
 ﻿# SPLProject
 
-## The sample data files required for the project are located in the 'Data' folder.
+### The sample data files required for the project are located in the 'Data' folder.
 
 ## Setup and Run API 
 To set the API, please run 'initAPI.ps1' script
