@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { addDynamicIconSelectors } = require('@iconify/tailwind');
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -10,6 +12,12 @@ module.exports = {
         brown: '#8D493A',
       },
     },
+    margin: {
+      'default': '1rem'
+    }
   },
-  plugins: [require('daisyui')],
+  plugins: [
+              require('daisyui'),
+              addDynamicIconSelectors(),
+          ],
 };
