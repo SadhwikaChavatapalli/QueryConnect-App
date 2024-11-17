@@ -4,8 +4,8 @@
 
 ## Setup and Run API 
 To set the API, please run 'initAPI.ps1' script
-To run the API, type - 'go run ./main.go' in the QueryConnectAPI folder.
+<br />To run the API, type - 'go run ./main.go' in the QueryConnectAPI folder.
 
 ## Setup and Run React 
 To set the React project, please run 'npm install' command
-To run the React, type - 'npm start' in the 'splwebreact' folder
+<br />To run the React, type - 'npm start' in the 'splwebreact' folder
