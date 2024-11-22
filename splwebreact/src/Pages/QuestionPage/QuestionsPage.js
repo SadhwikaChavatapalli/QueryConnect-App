@@ -54,7 +54,7 @@ const QuestionsPage = () =>{
         const value = event.target.value; 
         console.log("Selected value:", value); 
         setIntrType(value);
-        loadInteractionsByType();
+        //loadInteractionsByType();
     };
 
     //#region Pagination Logic
@@ -72,9 +72,9 @@ const QuestionsPage = () =>{
     //#endregion Pagination Logic
 
     useEffect(() => {
-        //loadInteractionsByType(intrType);
-        loadInteractionsByKeywords(keywords);
-    },[keywords])
+        loadInteractionsByType(intrType);
+        //loadInteractionsByKeywords(keywords);
+    },[intrType])
 
     return (
         <div className='flex flex-col gap-4'>
