@@ -4,14 +4,42 @@ import (
 	"QueryConnectAPI/controllers"
 	"QueryConnectAPI/models"
 
+	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
 
 func main() {
 	app := iris.New()
+
+	crs := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+	})
+
 	mvc.New(app.Party("/interactions")).Handle(new(controllers.InteractionsController))
+
+	app.Get("/interactions/type", func(ctx iris.Context) {
+		controller := controllers.InteractionsController{}
+		interactions := controller.GetByType(ctx)
+		ctx.JSON(interactions)
+	})
+
+	app.Get("/interactions/owner", func(ctx iris.Context) {
+		controller := controllers.InteractionsController{}
+		interactions := controller.GetByType(ctx)
+		ctx.JSON(interactions)
+	})
+
+	app.Get("/interactions/interaction", func(ctx iris.Context) {
+		controller := controllers.InteractionsController{}
+		interactions := controller.GetInteractionsByInteractionId(ctx)
+		ctx.JSON(interactions)
+	})
+
 	mvc.New(app.Party("/responses")).Handle(new(controllers.ResponsesController))
+
+	app.UseRouter(crs)
 	app.Run(iris.Addr(":8080"))
 
 	// interactionsAPI := app.Party("/interactions")

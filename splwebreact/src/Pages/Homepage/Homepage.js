@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserIcon } from '@heroicons/react/24/solid'; // Updated for Heroicons v2
 import QuestionsPage from '../QuestionPage/QuestionsPage';
 import './Homepage.css'
+import SearchComponent from '../../Components/Search/Search';
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -43,27 +44,40 @@ const Homepage = () => {
   };
 
   return (
-    <div role="tablist" className="tabs tabs-lifted tabs-lg">
-      <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Top Questions" defaultChecked />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+    <div Class='content'>
+      <div Class='justify-center'>
+        <SearchComponent />
+      </div>
+      
+      
+      <div className="pt-8">
         <QuestionsPage />
       </div>
+      
+      {/* <div role="tablist" className="tabs tabs-lifted tabs-lg">
+        <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Top Questions" defaultChecked />
+        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+          <QuestionsPage />
+        </div>
 
-      <input
-        type="radio"
-        name="my_tabs_2"
-        role="tab"
-        className="tab"
-        aria-label="Tab 2" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
-        Tab content 2
-      </div>
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          className="tab"
+          aria-label="Tab 2" />
+        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+          Tab content 2
+        </div>
 
-      <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Tab 3" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
-        Tab content 3
-      </div>
+        <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Tab 3" />
+        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+          Tab content 3
+        </div>
+      </div> */}
     </div>
+    
+    
   );
 };
 

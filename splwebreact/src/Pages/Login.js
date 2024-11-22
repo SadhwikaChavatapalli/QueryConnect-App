@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === 'test@example.com' && password === 'password') {
+    if (email === 'test@test' && password === 'test') {
       onLogin();
       navigate('/home');
     } else {

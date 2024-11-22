@@ -3,21 +3,22 @@ package models
 import (
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//Global declarations
+// Global declarations
 var (
 	Interactions map[primitive.ObjectID]bson.D //list of all interactions
 )
 
-//Interaction can be a question, discussion or debate
+// Interaction can be a question, discussion or debate
 type Interaction struct {
 	ObjectId        primitive.ObjectID
 	InteractionId   int32
@@ -36,7 +37,7 @@ func init() {
 	Interactions = make(map[primitive.ObjectID]bson.D)
 }
 
-//extractResults function iterates over the provided cursor and populates the list of interactions
+// extractResults function iterates over the provided cursor and populates the list of interactions
 func extractResults(ctx context.Context, cur *mongo.Cursor) []Interaction {
 	var interactions []Interaction
 	for cur.Next(ctx) {
@@ -79,7 +80,7 @@ func extractResults(ctx context.Context, cur *mongo.Cursor) []Interaction {
 	return interactions
 }
 
-//GetAllInteractions function
+// GetAllInteractions function
 func GetAllInteractions() []Interaction {
 
 	var allInteractions []Interaction
@@ -87,7 +88,12 @@ func GetAllInteractions() []Interaction {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
+
 	cur, err := collection.Find(ctx, bson.D{})
 
 	if err != nil {
@@ -96,10 +102,11 @@ func GetAllInteractions() []Interaction {
 
 	allInteractions = extractResults(ctx, cur)
 	defer cur.Close(ctx)
+	defer client.Disconnect(ctx)
 	return allInteractions
 }
 
-//GetInteractionsByType function returns all interactions of type question
+// GetInteractionsByType function returns all interactions of type question
 func GetInteractionsByType(interactionType string) []Interaction {
 
 	var interactionsByType []Interaction
@@ -107,7 +114,13 @@ func GetInteractionsByType(interactionType string) []Interaction {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	//Declare filter
 	var filter bson.M
@@ -135,13 +148,13 @@ func GetInteractionsByType(interactionType string) []Interaction {
 
 	interactionsByType = extractResults(ctx, cur)
 	defer cur.Close(ctx)
-
+	defer client.Disconnect(ctx)
 	return interactionsByType
 
 }
 
-//GetInteractionsByTags function returns all interactions containing the topic
-//Input is comma separated topics' list
+// GetInteractionsByTags function returns all interactions containing the topic
+// Input is comma separated topics' list
 func GetInteractionsByTags(interactionType string) []Interaction {
 
 	var interactionsByTopic []Interaction
@@ -152,7 +165,13 @@ func GetInteractionsByTags(interactionType string) []Interaction {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	filter := bson.D{
 		{"tags", primitive.Regex{Pattern: pattern, Options: "i"}},
@@ -164,20 +183,25 @@ func GetInteractionsByTags(interactionType string) []Interaction {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
 	defer cur.Close(ctx)
-
+	defer client.Disconnect(ctx)
 	interactionsByTopic = extractResults(ctx, cur)
 
 	return interactionsByTopic
 
 }
 
-//InsertInteraction function inserts a new Interaction
+// InsertInteraction function inserts a new Interaction
 func InsertInteraction(interaction Interaction) string {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	intrType, err := primitive.ParseDecimal128(strconv.Itoa(int(interaction.InteractionType)))
 
@@ -196,16 +220,23 @@ func InsertInteraction(interaction Interaction) string {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
 
+	defer client.Disconnect(ctx)
 	return result.InsertedID.(primitive.ObjectID).Hex()
 }
 
-//UpdateInteraction function updates an Interaction
+// UpdateInteraction function updates an Interaction
 func UpdateInteraction(interaction Interaction, updateResponsesFlag bool) int64 {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	intrType, err := primitive.ParseDecimal128(strconv.Itoa(int(interaction.InteractionType)))
 	objId := bson.D{{"_id", interaction.ObjectId}}
@@ -242,17 +273,24 @@ func UpdateInteraction(interaction Interaction, updateResponsesFlag bool) int64 
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
 
+	defer client.Disconnect(ctx)
 	return result.ModifiedCount
 
 }
 
-//DeleteInteraction function deletes an Interaction
+// DeleteInteraction function deletes an Interaction
 func DeleteInteraction(objectID string) int64 {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	objID, err := primitive.ObjectIDFromHex(objectID)
 
@@ -264,11 +302,12 @@ func DeleteInteraction(objectID string) int64 {
 		fmt.Printf("Error occured! The error is - %s", err.Error)
 	}
 
+	defer client.Disconnect(ctx)
 	return result.DeletedCount
 
 }
 
-//GetInteractionsByOwnerID returns interactions by OwnerID
+// GetInteractionsByOwnerID returns interactions by OwnerID
 func GetInteractionsByOwnerID(OwnerID string) []Interaction {
 
 	var interactionsByType []Interaction
@@ -276,7 +315,13 @@ func GetInteractionsByOwnerID(OwnerID string) []Interaction {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "interactions")
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
 
 	//Declare filter
 	ownerId, err := primitive.ObjectIDFromHex(OwnerID)
@@ -290,7 +335,39 @@ func GetInteractionsByOwnerID(OwnerID string) []Interaction {
 
 	interactionsByType = extractResults(ctx, cur)
 	defer cur.Close(ctx)
+	defer client.Disconnect(ctx)
+	return interactionsByType
 
+}
+
+func GetInteractionsByInteractionObjectID(InteractionObjectID string) []Interaction {
+
+	var interactionsByType []Interaction
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
+	defer cancel()
+
+	//collection, err := getModelCollection(ctx, "interactions")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "interactions")
+
+	//Declare filter
+	interactionObjectId, err := primitive.ObjectIDFromHex(InteractionObjectID)
+	filter := bson.M{"_id": interactionObjectId}
+
+	cur, err := collection.Find(ctx, filter)
+
+	if err != nil {
+		fmt.Printf("error occurred! Error is - %s", err.Error())
+	}
+
+	interactionsByType = extractResults(ctx, cur)
+	defer cur.Close(ctx)
+	defer client.Disconnect(ctx)
 	return interactionsByType
 
 }

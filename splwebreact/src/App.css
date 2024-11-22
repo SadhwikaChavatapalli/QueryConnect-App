@@ -48,7 +48,7 @@ body {
 
 /* Customize text inputs */
 .input {
-  background-color: #F8EDE3; /* Light background color */
+  /* background-color: #F8EDE3;  Light background color */
   border-color: #D0B8A8;
   color: #8D493A; /* Text color */
 }
@@ -81,7 +81,6 @@ body {
 
 /* Textarea and button styling */
 .textarea {
-  background-color: #F8EDE3; /* Light beige from your palette */
   color: #8D493A; /* Deep brown text color */
   border-color: #D0B8A8; /* Lighter brown border color */
 }

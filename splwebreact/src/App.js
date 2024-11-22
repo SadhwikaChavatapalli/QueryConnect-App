@@ -8,12 +8,12 @@ import Login from './Pages/Login';
 import Homepage from './Pages/Homepage/Homepage';
 import SignUp from './Pages/SignUp';
 import AddQuestion from './Pages/AddQuestion';
-import ViewQuestion from './Pages/ViewQuestion';
+import ViewQuestion from './Pages/QuestionPage/ViewQuestion';
 import './App.css';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);  // For login state
+  const [isAuthenticated, setIsAuthenticated] = useState(true);  // useState(false); For login state
 
   return (
     <div>

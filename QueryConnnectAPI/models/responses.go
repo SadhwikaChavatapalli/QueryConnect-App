@@ -86,7 +86,12 @@ func InsertResponse(response Response) string {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
 
 	respType, err := primitive.ParseDecimal128(strconv.Itoa(int(response.ResponseType)))
 
@@ -103,6 +108,7 @@ func InsertResponse(response Response) string {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
 
+	defer client.Disconnect(ctx)
 	return result.InsertedID.(primitive.ObjectID).Hex()
 }
 
@@ -112,7 +118,14 @@ func UpdateResponse(response Response) int64 {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
+
 	objId := bson.D{{"_id", response.ObjectId}}
 
 	doc := bson.D{
@@ -127,6 +140,7 @@ func UpdateResponse(response Response) int64 {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
 
+	defer client.Disconnect(ctx)
 	return result.ModifiedCount
 }
 
@@ -136,7 +150,13 @@ func DeleteResponse(objectID string) int64 {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
 
 	objID, err := primitive.ObjectIDFromHex(objectID)
 
@@ -148,6 +168,7 @@ func DeleteResponse(objectID string) int64 {
 		fmt.Printf("Error occured! The error is - %s", err.Error())
 	}
 
+	defer client.Disconnect(ctx)
 	return result.DeletedCount
 
 }
@@ -160,7 +181,13 @@ func GetResponsesByOwnerID(OwnerID string) []Response {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
 
 	//Declare filter
 	ownerId, err := primitive.ObjectIDFromHex(OwnerID)
@@ -175,6 +202,7 @@ func GetResponsesByOwnerID(OwnerID string) []Response {
 	responses = extractResponses(ctx, cur)
 	defer cur.Close(ctx)
 
+	defer client.Disconnect(ctx)
 	return responses
 
 }
@@ -187,7 +215,13 @@ func GetResponsesByResponseID(ResponseID string) Response {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
 
 	//Declare filter
 	responseId, err := primitive.ObjectIDFromHex(ResponseID)
@@ -201,7 +235,7 @@ func GetResponsesByResponseID(ResponseID string) Response {
 
 	responses = extractResponses(ctx, cur)
 	defer cur.Close(ctx)
-
+	defer client.Disconnect(ctx)
 	return responses[0]
 
 }
@@ -214,7 +248,13 @@ func GetResponsesByIntrID(intrID string) []Response {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) //Define context
 	defer cancel()
 
-	collection, err := getModelCollection(ctx, "responses")
+	//collection, err := getModelCollection(ctx, "responses")
+
+	client, err := getClientConnection(ctx)
+	if err != nil {
+		fmt.Printf("error occurred while connecting to client! Error is - %s", err.Error())
+	}
+	collection := getModelCollection(client, "responses")
 
 	//Declare filter
 	intrId, err := primitive.ObjectIDFromHex(intrID)
@@ -229,6 +269,7 @@ func GetResponsesByIntrID(intrID string) []Response {
 	responses = extractResponses(ctx, cur)
 	defer cur.Close(ctx)
 
+	defer client.Disconnect(ctx)
 	return responses
 
 }
