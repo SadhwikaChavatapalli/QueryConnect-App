@@ -87,7 +87,7 @@ if (loading)
                                 <div className="card bg-base-100 shadow-xl">
                                 <div className="card-body bg-base-200">
                                   <p className="font-medium">{item.ResponseContent}</p>
-                                  <div className='italic font-light mt-4 text-xs float-right'>Posted on: {Date(item.DateUpdated)}</div>
+                                  <div className='italic font-light mt-4 text-xs float-right'>Posted on: {(Date(item.DateUpdated))}</div>
                                 </div>
                               </div>)
                 }</>

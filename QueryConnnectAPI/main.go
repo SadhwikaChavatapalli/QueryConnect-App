@@ -37,6 +37,12 @@ func main() {
 		ctx.JSON(interactions)
 	})
 
+	app.Get("/interactions/search", func(ctx iris.Context) {
+		controller := controllers.InteractionsController{}
+		interactions := controller.Search(ctx)
+		ctx.JSON(interactions)
+	})
+
 	mvc.New(app.Party("/responses")).Handle(new(controllers.ResponsesController))
 
 	app.UseRouter(crs)

@@ -60,3 +60,9 @@ func (c *InteractionsController) Post(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(interaction)
 }
+
+func (c *InteractionsController) Search(ctx iris.Context) []models.Interaction {
+	tags := ctx.URLParam("tags")
+	items := models.GetInteractionsByTags(tags)
+	return items
+}
