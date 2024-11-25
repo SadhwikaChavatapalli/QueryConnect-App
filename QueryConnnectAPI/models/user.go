@@ -78,7 +78,7 @@ func AddUser(user User) string {
 		"level":         2,
 		"userName":      user.UserName,
 		"password":      user.Password,
-		"userRole":      "eurus_contributor",
+		"userRole":      "contributor",
 		"userRoleClass": 2,
 		"email":         user.Email,
 		"description":   "This is a contributor role. UserRoleClass is 2 which indicates role is 'contributor', the user who conributes to the discusson.Level 2 indicates that user is a silver member"})

@@ -1,6 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const NavbarComponent = ({isAuthenticated}) => {
+
+  const userID = localStorage.getItem("user");
+
+  const gotoProfile = () => {
+    Navigate(`/signup/${userID}`);
+  }
     
     return (
     <div className="navbar bg-base-100">
@@ -50,7 +56,7 @@ const NavbarComponent = ({isAuthenticated}) => {
                   !isAuthenticated &&<li><Link to='/Login'>Login</Link></li>
                 }
                 {
-                  isAuthenticated && <li><Link to='/Profile'>View Profile</Link></li>
+                  isAuthenticated && <li><Link to={`/signup/${userID}`}>View Profile</Link></li>
                 }
                 {
                   isAuthenticated && <li><Link to='/logout'>Logout</Link></li>

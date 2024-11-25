@@ -44,7 +44,7 @@ function App() {
           {/* Edit Question Route (Protected) */}
           <Route
             path="/edit-question/:id"
-            element={<AddQuestion />}
+            element={isAuthenticated ? <AddQuestion /> : <Navigate to="/" />}
           />
 
           {/* View Question Route (Protected, expects question ID) */}
@@ -54,7 +54,10 @@ function App() {
           />
 
           {/* Sign Up Route */}
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp onLogin={() => setIsAuthenticated(true)}/>} />
+
+          {/* Profile Route */}
+          <Route path="/signup/:id" element={<SignUp onLogin={() => {}}/>} />
         </Routes>
       </Router>
     </div>

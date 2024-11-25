@@ -53,6 +53,12 @@ func main() {
 		ctx.JSON(user)
 	})
 
+	app.Get("/users/user", func(ctx iris.Context) {
+		userController := controllers.UserController{}
+		user := userController.GetUserByID(ctx)
+		ctx.JSON(user)
+	})
+
 	app.Post("/interactions/edit", func(ctx iris.Context) {
 		controller := controllers.InteractionsController{}
 		controller.Edit(ctx)

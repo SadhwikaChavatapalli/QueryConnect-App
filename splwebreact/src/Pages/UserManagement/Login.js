@@ -64,7 +64,7 @@ const Login = ({ onLogin }) => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title">Login to Your Account</h2>
+          <h2 className="card-title">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-control">
               <label className="label">
@@ -89,11 +89,8 @@ const Login = ({ onLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-              </label>
             </div> 
-            <div className="form-control mt-6">
+            <div className="form-control mt-6 py-12">
               <button type="submit" className="btn btn-primary">Login</button>
               {alertVisible && ( <div className="flex alert alert-success"> <span>{alertMessage}</span> </div>)}
               {errorVisible && ( <div className="flex alert alert-error"> <span>{errorMessage}</span> </div>)}
