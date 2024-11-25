@@ -5,6 +5,7 @@ import axios, { HttpStatusCode } from 'axios';
 const ViewQuestion = () => {
   const { id } = useParams(); // Get question ID from URL
 
+  const [userID] = useState(localStorage.getItem("user"));
   const [data, setData] = useState(null);
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true); // Add a loading state
@@ -92,17 +93,18 @@ if (loading)
                 }</>
           </>)}
           
-          <div className="form-control py-16">
+          {userID !== 'undefined' && <div className="form-control py-16">
             <textarea placeholder="Type your response here" 
                       className="textarea textarea-bordered bg-base-100"
                       value={userResponse}
                       onChange={(event) => {setUserResponse(event.target.value)}}/>
-          </div>
+          </div>}
           {alertVisible && ( <div className="flex alert alert-success"> <span>{alertMessage}</span> </div>)}
 
-          <div className="card-actions justify-end">
+
+            {userID !== 'undefined' && (<div className="card-actions justify-end">
             <button className="btn btn-primary" onClick={postResponse}>Post Response</button>
-          </div>
+          </div>)}
         </div>
       </div>
     </div>

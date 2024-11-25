@@ -7,10 +7,14 @@ const Logout = ({onLogout}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        onLogout();
-        navigate('/');
-        localStorage.setItem("user", undefined);
-        localStorage.setItem("userRoleClass",undefined);
+        const userConfirmed = window.confirm('Are you sure you want to logout?');
+        if (userConfirmed) { 
+            onLogout();
+            localStorage.setItem("user", undefined);
+            localStorage.setItem("userRoleClass",undefined);
+            localStorage.setItem("userName",undefined);
+            navigate('/');
+        }
     });
 
     return  <></>

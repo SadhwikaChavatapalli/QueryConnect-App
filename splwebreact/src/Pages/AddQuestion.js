@@ -105,8 +105,8 @@ const AddQuestion = () => {
     <div className="flex h-screen justify-center justify-items-center">
       <div className="card flex-1 bg-base-100 shadow-x max-w-xl">
         <div className="card-body">
-          {id !== 0 && <h2 className="card-title">Edit Post</h2>}
-          {id === 0 && <h2 className="card-title">Create New Post</h2>}
+          {id !== undefined && <h2 className="card-title">Edit Post</h2>}
+          {id === undefined && <h2 className="card-title">Create New Post</h2>}
           <input type="text" 
                   placeholder="Specify Topic Name Here" 
                   className="input input-bordered w-full max-w-xl mt-8"

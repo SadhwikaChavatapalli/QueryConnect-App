@@ -101,7 +101,7 @@ const QuestionsPage = () =>{
     }
 
     const deleteQuestion = (questionId) => {
-        const userConfirmed = window.confirm('Are you sure you want delete?');
+        const userConfirmed = window.confirm('Are you sure you want delete this post?');
         if (userConfirmed) { 
             axios.get(`http://localhost:8080/interactions/delete?id=${questionId}`)
             .then(response => {

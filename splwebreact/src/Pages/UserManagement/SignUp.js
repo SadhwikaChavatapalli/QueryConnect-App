@@ -60,8 +60,9 @@ const SignUp = ({ onLogin }) => {
       else {
         setAlertMessage(`Great, ${userName}! You are now a part of QueryConnect!`);
         setAlertVisible(true);
-        localStorage.setItem("user",response.data.UserObjectId);
-        localStorage.setItem("userRoleClass", response.data.UserRoleClass);
+        localStorage.setItem("user",response.data);
+        localStorage.setItem("userRoleClass", 2);
+        localStorage.setItem("userName",userName);
         onLogin();
         setTimeout(() => { navigate('/'); }, 2000);
       }
@@ -133,7 +134,8 @@ const SignUp = ({ onLogin }) => {
               />
             </div>
             <div className="form-control mt-6 py-12">
-              <button type="submit" className="btn btn-primary">Sign Up</button>
+              {id === undefined &&<button type="submit" className="btn btn-primary">Sign Up</button>}
+              {id !== undefined &&<button type="submit" className="btn btn-primary">Save</button>}
               {alertVisible && ( <div className="flex alert alert-success"> <span>{alertMessage}</span> </div>)}
               {errorVisible && ( <div className="flex alert alert-error"> <span>{errorMessage}</span> </div>)}
             </div>
@@ -142,9 +144,9 @@ const SignUp = ({ onLogin }) => {
           {/* Fix href issue with Link */}
           <div className="text-center mt-4">
             <p className="text-sm text-gray-400">
-              Don't have an account?{' '}
-              <Link to="/signup" className="link link-primary">
-                Sign Up
+              Already have an account?{' '}
+              <Link to="/login" className="link link-primary">
+                login
               </Link>
             </p>
           </div>
