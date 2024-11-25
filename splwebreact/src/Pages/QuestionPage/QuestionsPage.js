@@ -6,6 +6,7 @@ import axios from 'axios';
 const QuestionsPage = () =>{
 
     const userID = localStorage.getItem("user");
+    const userRoleClass = localStorage.getItem("userRoleClass"); //0: admin
     const [data, setData] = useState([]);
     const [intrType, setIntrType] = useState("all");
     const navigate = useNavigate();
@@ -99,6 +100,17 @@ const QuestionsPage = () =>{
         navigate(`/edit-question/${questionId}`);
     }
 
+    const deleteQuestion = (questionId) => {
+        const userConfirmed = window.confirm('Are you sure you want delete?');
+        if (userConfirmed) { 
+            axios.get(`http://localhost:8080/interactions/delete?id=${questionId}`)
+            .then(response => {
+                alert("Post deleted successfully!");
+                navigate(`/`);
+            });
+        }
+    }
+
     //#endregion Action dropdown Logic
     const openDescriptionPage = (id) => {
         navigate(`/question/${id}`);
@@ -164,10 +176,10 @@ const QuestionsPage = () =>{
                                                     </svg>
 
                                                         <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-26 p-2 shadow">
-                                                            {userID == item.OwnerId && <li><button className='btn btn-sm' onClick={() => editQuestion(item.ObjectId)}>Edit</button></li>}
-                                                            {userID != item.OwnerId && <li><button className='btn btn-sm btn-disabled'>Edit</button></li>}
-                                                            {userID == item.OwnerId && <li><button className='btn btn-sm'>Delete</button></li>}
-                                                            {userID != item.OwnerId && <li><button className='btn btn-sm btn-disabled'>Delete</button></li>}
+                                                            {(userID == item.OwnerId || userRoleClass === 0) && <li><button className='btn btn-sm' onClick={() => editQuestion(item.ObjectId)}>Edit</button></li>}
+                                                            {(userID != item.OwnerId && userRoleClass !== 0) && <li><button className='btn btn-sm btn-disabled'>Edit</button></li>}
+                                                            {(userID == item.OwnerId || userRoleClass === 0) && <li><button className='btn btn-sm' onClick={() => deleteQuestion(item.ObjectId)}>Delete</button></li>}
+                                                            {(userID != item.OwnerId && userRoleClass !== 0) && <li><button className='btn btn-sm btn-disabled'>Delete</button></li>}
                                                         </ul>
                                                     </button>
                                                 </div>

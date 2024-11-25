@@ -46,6 +46,7 @@ const Login = ({ onLogin }) => {
         setAlertMessage(`Welcome, ${response.data.UserName}`);
         setAlertVisible(true);
         localStorage.setItem("user",response.data.UserObjectId);
+        localStorage.setItem("userRoleClass", response.data.UserRoleClass);
         onLogin();
         setTimeout(() => { navigate('/'); }, 2000);
       }

@@ -86,3 +86,10 @@ func (c *InteractionsController) Search(ctx iris.Context) []models.Interaction {
 	items := models.GetInteractionsByTags(tags)
 	return items
 }
+
+func (c *InteractionsController) DeleteByID(ctx iris.Context) {
+	id := ctx.URLParam("id")
+	models.DeleteInteraction(id)
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(iris.Map{"message": "Item deleted successfully"})
+}

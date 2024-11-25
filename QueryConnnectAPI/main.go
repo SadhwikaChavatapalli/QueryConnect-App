@@ -58,6 +58,11 @@ func main() {
 		controller.Edit(ctx)
 	})
 
+	app.Get("/interactions/delete", func(ctx iris.Context) {
+		controller := controllers.InteractionsController{}
+		controller.DeleteByID(ctx)
+	})
+
 	app.UseRouter(crs)
 	app.Run(iris.Addr(":8080"))
 }

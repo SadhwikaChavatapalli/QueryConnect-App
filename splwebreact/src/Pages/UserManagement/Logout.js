@@ -10,6 +10,7 @@ const Logout = ({onLogout}) => {
         onLogout();
         navigate('/');
         localStorage.setItem("user", undefined);
+        localStorage.setItem("userRoleClass",undefined);
     });
 
     return  <></>
