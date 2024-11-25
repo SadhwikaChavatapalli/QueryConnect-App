@@ -5,8 +5,8 @@ import axios from 'axios';
 
 const QuestionsPage = () =>{
 
-    const userID = localStorage.getItem("user");
-    const userRoleClass = localStorage.getItem("userRoleClass"); //0: admin
+    const [userID] = useState(localStorage.getItem("user"));
+    const [userRoleClass] = useState(localStorage.getItem("userRoleClass")); //0: admin
     const [data, setData] = useState([]);
     const [intrType, setIntrType] = useState("all");
     const navigate = useNavigate();
@@ -106,7 +106,7 @@ const QuestionsPage = () =>{
             axios.get(`http://localhost:8080/interactions/delete?id=${questionId}`)
             .then(response => {
                 alert("Post deleted successfully!");
-                navigate(`/`);
+                loadInteractionsByType();
             });
         }
     }
@@ -165,7 +165,9 @@ const QuestionsPage = () =>{
                     </thead>
                     <tbody>
                     {currentData.length === 0 && <h3>No records found...</h3>}
-                    {currentData.length > 0 && currentData.map(item => (
+                    {currentData.length > 0 && currentData.map(item => {
+                        const isAuthorized = userID === item.OwnerId || userRoleClass == 0;
+                        return (
                         (typeInt === -1 || item.InteractionType === typeInt) &&
                                         <tr key={item.ObjectId} className="hover" onClick={() => {if (!actionDropdownOpen) openDescriptionPage(item.ObjectId)}}>
                                             <td>
@@ -174,13 +176,23 @@ const QuestionsPage = () =>{
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                                                     </svg>
-
-                                                        <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-26 p-2 shadow">
-                                                            {(userID == item.OwnerId || userRoleClass === 0) && <li><button className='btn btn-sm' onClick={() => editQuestion(item.ObjectId)}>Edit</button></li>}
-                                                            {(userID != item.OwnerId && userRoleClass !== 0) && <li><button className='btn btn-sm btn-disabled'>Edit</button></li>}
-                                                            {(userID == item.OwnerId || userRoleClass === 0) && <li><button className='btn btn-sm' onClick={() => deleteQuestion(item.ObjectId)}>Delete</button></li>}
-                                                            {(userID != item.OwnerId && userRoleClass !== 0) && <li><button className='btn btn-sm btn-disabled'>Delete</button></li>}
-                                                        </ul>
+                                                            {
+                                                                <ul tabIndex={0}
+                                                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-26 p-2 shadow">
+                                                                    <li>
+                                                                    <button className={`btn btn-sm ${isAuthorized ? '' : 'btn-disabled'}`}
+                                                                            onClick={isAuthorized ? () => editQuestion(item.ObjectId) : undefined}>
+                                                                        Edit
+                                                                    </button>
+                                                                    </li>
+                                                                    <li>
+                                                                    <button className={`btn btn-sm ${isAuthorized ? '' : 'btn-disabled'}`}
+                                                                            onClick={isAuthorized ? () => deleteQuestion(item.ObjectId) : undefined}>
+                                                                        Delete
+                                                                    </button>
+                                                                    </li>
+                                                                </ul>                                                                
+                                                            }
                                                     </button>
                                                 </div>
                                             </td>
@@ -200,7 +212,7 @@ const QuestionsPage = () =>{
 
                                             <td className='font-light text-sm float-right'>{new Date(item.DateUpdated).toLocaleDateString()}, at {new Date(item.DateUpdated).toLocaleTimeString()}</td>
 
-                                        </tr> ))}
+                                        </tr> )})}
                     </tbody>
                 </table>
             </div>
