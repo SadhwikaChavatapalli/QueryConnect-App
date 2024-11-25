@@ -1,53 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
 const QuestionsPage = () =>{
 
+    const userID = localStorage.getItem("user");
     const [data, setData] = useState([]);
     const [intrType, setIntrType] = useState("all");
     const navigate = useNavigate();
+    const [typeInt, setTypeInt] = useState(-1);
 
     //#region Search Logic
 
     const [keywords, setKeywords] = useState('');
 
-    const OnSearchClick = (keywords) => {
-        setKeywords(keywords);
+    const OnSearchClick = () => {
+        //setKeywords(keywords);
+        loadInteractionsByKeywords();
     }
 
-    //#endregion Search Logic
-
-    const loadInteractionsByType = (type) => {
-
-        if (type === "all")
-        {
-            axios.get(`http://localhost:8080/interactions`)
-                .then(response => {
-                    setData(response.data);
-                });
-        }
-        else
-        {
-            axios.get(`http://localhost:8080/interactions/type?intrType=${type}`)
-                .then(response => {
-                    setData(response.data);
-                });
-        }
+    const OnClearClick = () => {
         
+        setKeywords('');
+        setIntrType('all');
+        loadInteractionsByType();
     }
 
-    const loadInteractionsByKeywords = (keywords) => {
+    const loadInteractionsByKeywords = useCallback(() => {
         axios.get(`http://localhost:8080/interactions/search?tags=${keywords}`)
                 .then(response => {
                     setData(response.data);
                 });
-    }
+    },[keywords])
 
-    const openDescriptionPage = (id) => {
-        navigate(`/question/${id}`);
-    }
+    //#endregion Search Logic
+
+    //#region Dropdown Logic
+
+    const loadInteractionsByType = useCallback(() => {
+
+        if ((keywords === undefined || keywords === '') && intrType === "all")
+        {
+            axios.get(`http://localhost:8080/interactions`)
+                .then(response => {
+                    console.log('Getting all data...');
+                    setData(response.data);
+                    setTypeInt(-1);
+                });
+                return;
+        }
+        else if (intrType === "all")
+        {
+            loadInteractionsByKeywords();
+            setTypeInt(-1);
+            return;
+        }
+
+        const typeInt = intrType === 'question' ? 0 : (intrType === 'debate' ? 1 : 2);
+
+        setTypeInt(typeInt);
+        
+    }, [intrType])
 
     // Function to handle the dropdown change 
     const handleDropdownChange = (event) => { 
@@ -57,6 +71,8 @@ const QuestionsPage = () =>{
         //loadInteractionsByType();
     };
 
+    //#endregion Dropdown Logic
+
     //#region Pagination Logic
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -64,17 +80,34 @@ const QuestionsPage = () =>{
 
     const indexOfLastRow = currentPage * rowsPerPage; 
     const indexOfFirstRow = indexOfLastRow - rowsPerPage; 
-    const currentData = data.slice(indexOfFirstRow, indexOfLastRow);
 
-    const totalPages = Math.ceil(data.length / rowsPerPage); 
-    const handleClick = (page) => setCurrentPage(page)
+    const filteredData = data != null ? data.filter(item => typeInt === -1 || item.InteractionType === typeInt) : [];
+    const currentData = filteredData != null ? filteredData.slice(indexOfFirstRow, indexOfLastRow) : [];
+    const totalPages = filteredData != null ? Math.ceil(filteredData.length / rowsPerPage) : 0; 
+    
+    const handleClick = (page) => {
+        setCurrentPage(page)
+    }
 
     //#endregion Pagination Logic
 
+    //#region Action dropdown Logic
+
+    const [actionDropdownOpen, setActionDropdownOpen] = useState(false);
+
+    const editQuestion = (questionId) => {
+        navigate(`/edit-question/${questionId}`);
+    }
+
+    //#endregion Action dropdown Logic
+    const openDescriptionPage = (id) => {
+        navigate(`/question/${id}`);
+    }
+
     useEffect(() => {
-        loadInteractionsByType(intrType);
+        loadInteractionsByType();
         //loadInteractionsByKeywords(keywords);
-    },[intrType])
+    },[intrType, loadInteractionsByType])
 
     return (
         <div className='flex flex-col gap-4'>
@@ -93,13 +126,14 @@ const QuestionsPage = () =>{
                 </label>
 
                 <input type="text" 
-                placeholder="Search Topic" 
+                placeholder="Provide comma separated keywords for search" 
                 className="input input-bordered input-lg w-full max-w-2xl"
                 value={keywords}
                 onChange={(event) => {setKeywords(event.target.value)}} />
                 
                 <button className="btn btn-primary btn-lg" onClick={() => {OnSearchClick()}}>GO</button>
-                <button className="btn btn-default btn-lg" onClick={() => {OnSearchClick()}}>Clear</button>
+                <button className="btn btn-default btn-lg" 
+                        onClick={() => { OnClearClick()}}>Clear</button>
             </div>
             
             {/* --- Search ---- */}
@@ -110,14 +144,35 @@ const QuestionsPage = () =>{
                     {/* head */}
                     <thead>
                     <tr>
+                        <th>Actions</th>
                         <th>Topic</th>
                         <th>Type</th>
                         <th>Tags</th>
+                        <th className='float-right'>Last Update</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {currentData.map(item => ( 
-                                        <tr key={item.ObjectId} className="hover" onClick={() => openDescriptionPage(item.ObjectId)}>
+                    {currentData.length === 0 && <h3>No records found...</h3>}
+                    {currentData.length > 0 && currentData.map(item => (
+                        (typeInt === -1 || item.InteractionType === typeInt) &&
+                                        <tr key={item.ObjectId} className="hover" onClick={() => {if (!actionDropdownOpen) openDescriptionPage(item.ObjectId)}}>
+                                            <td>
+                                                <div className="dropdown">
+                                                    <button className="btn btn-link" onMouseEnter={() => setActionDropdownOpen(true)} onMouseLeave={() => setActionDropdownOpen(false)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                                                    </svg>
+
+                                                        <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-26 p-2 shadow">
+                                                            {userID == item.OwnerId && <li><button className='btn btn-sm' onClick={() => editQuestion(item.ObjectId)}>Edit</button></li>}
+                                                            {userID != item.OwnerId && <li><button className='btn btn-sm btn-disabled'>Edit</button></li>}
+                                                            {userID == item.OwnerId && <li><button className='btn btn-sm'>Delete</button></li>}
+                                                            {userID != item.OwnerId && <li><button className='btn btn-sm btn-disabled'>Delete</button></li>}
+                                                        </ul>
+                                                    </button>
+                                                </div>
+                                            </td>
+
                                             <th>{item.Topic}</th>
                                             <div>
                                             {item.InteractionType === 0 && <td>Question</td>}
@@ -129,7 +184,10 @@ const QuestionsPage = () =>{
                                                 <div className='space-x-1'>
                                                     {item.Tags.split(',').map(tag => <div className="badge badge-outline">{tag}</div>)}
                                                 </div>
-                                            </td>                                                
+                                            </td> 
+
+                                            <td className='font-light text-sm float-right'>{new Date(item.DateUpdated).toLocaleDateString()}, at {new Date(item.DateUpdated).toLocaleTimeString()}</td>
+
                                         </tr> ))}
                     </tbody>
                 </table>

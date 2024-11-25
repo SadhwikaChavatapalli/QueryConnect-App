@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Global declarations
@@ -94,7 +95,9 @@ func GetAllInteractions() []Interaction {
 	}
 	collection := getModelCollection(client, "interactions")
 
-	cur, err := collection.Find(ctx, bson.D{})
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{Key: "dateUpdated", Value: -1}})
+	cur, err := collection.Find(ctx, bson.D{}, findOptions)
 
 	if err != nil {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
@@ -241,28 +244,12 @@ func UpdateInteraction(interaction Interaction, updateResponsesFlag bool) int64 
 	intrType, err := primitive.ParseDecimal128(strconv.Itoa(int(interaction.InteractionType)))
 	objId := bson.D{{"_id", interaction.ObjectId}}
 
-	if updateResponsesFlag == true {
-
-		doc := bson.D{
-			{"$set", bson.D{{"topic", interaction.Topic},
-				{"interactionType", intrType},
-				{"description", interaction.Description},
-				{"tags", interaction.Tags},
-				//{"responses", interaction.Responses},
-				{"dateUpdated", time.Now()},
-			}},
-		}
-
-		result, err := collection.UpdateOne(ctx, objId, doc)
-
-		if err != nil {
-			fmt.Printf("error occurred! Error is - %s", err.Error())
-		}
-		return result.ModifiedCount
-	}
-
 	doc := bson.D{
-		{"$set", bson.D{{"responses", interaction.Responses},
+		{"$set", bson.D{{"topic", interaction.Topic},
+			{"interactionType", intrType},
+			{"description", interaction.Description},
+			{"tags", interaction.Tags},
+			//{"responses", interaction.Responses},
 			{"dateUpdated", time.Now()},
 		}},
 	}
@@ -272,10 +259,8 @@ func UpdateInteraction(interaction Interaction, updateResponsesFlag bool) int64 
 	if err != nil {
 		fmt.Printf("error occurred! Error is - %s", err.Error())
 	}
-
 	defer client.Disconnect(ctx)
 	return result.ModifiedCount
-
 }
 
 // DeleteInteraction function deletes an Interaction

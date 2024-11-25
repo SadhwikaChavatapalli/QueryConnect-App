@@ -61,6 +61,26 @@ func (c *InteractionsController) Post(ctx iris.Context) {
 	ctx.JSON(interaction)
 }
 
+func (c *InteractionsController) Edit(ctx iris.Context) {
+
+	var interaction models.Interaction
+
+	err := ctx.ReadJSON(&interaction)
+	fmt.Printf(interaction.Description)
+	if err != nil {
+		fmt.Printf(err.Error())
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(iris.Map{"error": "Invalid request payload"})
+		return
+	}
+	// Add your logic here to save the interaction
+	// For example, you could call a method on your model
+	res := models.UpdateInteraction(interaction, false)
+	fmt.Printf("\n%s", res)
+	ctx.StatusCode(iris.StatusCreated)
+	ctx.JSON(interaction)
+}
+
 func (c *InteractionsController) Search(ctx iris.Context) []models.Interaction {
 	tags := ctx.URLParam("tags")
 	items := models.GetInteractionsByTags(tags)

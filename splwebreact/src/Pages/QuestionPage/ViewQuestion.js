@@ -21,7 +21,6 @@ const ViewQuestion = () => {
     axios.get(`http://localhost:8080/interactions/interaction?interactionobjectid=${id}`)
             .then(response => {
                 setData(response.data[0]);
-                console.log(data);
                 axios.get(`http://localhost:8080/responses/${id}`)
                       .then(response => {
                         setResponses(response.data)
@@ -34,7 +33,7 @@ const ViewQuestion = () => {
     const userResponseToPost = {
                 InteractionId: id,
                 ResponseType:data.InteractionType, //0 answer for question, 1 opinion in debate, 2 point in discussion
-                OwnerId:"5ca6ad2c58fb5828cc0b3cb2",
+                OwnerId:localStorage.getItem("user"),
                 ResponseContent:userResponse};
 
                 axios.post(`http://localhost:8080/responses`, userResponseToPost,
@@ -87,7 +86,7 @@ if (loading)
                                 <div className="card bg-base-100 shadow-xl">
                                 <div className="card-body bg-base-200">
                                   <p className="font-medium">{item.ResponseContent}</p>
-                                  <div className='italic font-light mt-4 text-xs float-right'>Posted on: {(Date(item.DateUpdated))}</div>
+                                  <div className='italic font-light mt-4 text-xs float-right'>Posted on: {new Date(item.DateUpdated).toLocaleDateString()}, at {new Date(item.DateUpdated).toLocaleTimeString()}</div>
                                 </div>
                               </div>)
                 }</>
