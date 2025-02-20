@@ -1,4 +1,4 @@
-﻿# SPLProject
+﻿# QueryConnect-App
 
 ### The sample data files required for the project are located in the 'Data' folder.
 
